@@ -4,6 +4,7 @@ import caio.reserva_salas.exceptions.RecursoNaoEncontradoException;
 import caio.reserva_salas.model.Usuario;
 import caio.reserva_salas.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
+    @Transactional
     public Usuario criar(Usuario usuario) {
         validar(usuario);
 
@@ -23,15 +25,18 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    @Transactional(readOnly = true)
     public Usuario buscarPorId(Long id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado."));
     }
 
+    @Transactional(readOnly = true)
     public List<Usuario> listar() {
         return usuarioRepository.findAll();
     }
 
+    @Transactional
     public Usuario atualizar(Long id, Usuario dados) {
         Usuario usuario = buscarPorId(id);
 
@@ -45,6 +50,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    @Transactional
     public void remover(Long id) {
         Usuario usuario = buscarPorId(id);
         usuarioRepository.delete(usuario);

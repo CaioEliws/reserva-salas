@@ -6,7 +6,9 @@ import caio.reserva_salas.model.Sala;
 import caio.reserva_salas.model.StatusReserva;
 import caio.reserva_salas.model.Usuario;
 import caio.reserva_salas.repository.ReservaRepository;
+import jakarta.persistence.Table;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class ReservaService {
         this.usuarioService = usuarioService;
     }
 
+    @Transactional
     public Reserva criarReserva(Long salaId, Long usuarioId, Reserva reserva) {
         Sala sala = salaService.buscarPorId(salaId);
         Usuario usuario = usuarioService.buscarPorId(usuarioId);
@@ -42,6 +45,7 @@ public class ReservaService {
         return reservaRepository.save(reserva);
     }
 
+    @Transactional
     public Reserva cancelarReserva(Long reservaId) {
         Reserva reserva = buscarPorId(reservaId);
 
@@ -53,15 +57,18 @@ public class ReservaService {
         return reservaRepository.save(reserva);
     }
 
+    @Transactional(readOnly = true)
     public List<Reserva> listar() {
         return reservaRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Reserva buscarPorId(Long id) {
         return reservaRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Reserva não encontrada."));
     }
 
+    @Transactional
     public Reserva atualizar(Long id, Reserva dados) {
         Reserva reserva = buscarPorId(id);
 
@@ -74,6 +81,7 @@ public class ReservaService {
         return reservaRepository.save(reserva);
     }
 
+    @Transactional
     public void remover(Long id) {
         Reserva reserva = buscarPorId(id);
         reservaRepository.delete(reserva);

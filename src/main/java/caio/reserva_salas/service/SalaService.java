@@ -4,6 +4,7 @@ import caio.reserva_salas.exceptions.RecursoNaoEncontradoException;
 import caio.reserva_salas.model.Sala;
 import caio.reserva_salas.repository.SalaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class SalaService {
         this.salaRepository = salaRepository;
     }
 
+    @Transactional
     public Sala criar(Sala sala) {
         validar(sala);
 
@@ -23,15 +25,18 @@ public class SalaService {
         return salaRepository.save(sala);
     }
 
+    @Transactional(readOnly = true)
     public Sala buscarPorId(Long id) {
         return salaRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Sala não encontrada."));
     }
 
+    @Transactional
     public List<Sala> listar() {
         return salaRepository.findByAtivaTrue();
     }
 
+    @Transactional
     public Sala atualizar(Long id, Sala dados) {
         Sala sala = buscarPorId(id);
 
@@ -44,6 +49,7 @@ public class SalaService {
         return salaRepository.save(sala);
     }
 
+    @Transactional
     public void remover(Long id) {
         Sala sala = buscarPorId(id);
         salaRepository.delete(sala);

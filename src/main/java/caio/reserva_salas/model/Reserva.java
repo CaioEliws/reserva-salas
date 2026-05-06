@@ -1,14 +1,13 @@
 package caio.reserva_salas.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "reservas")
 @Getter
 @Setter
 public class Reserva {
@@ -17,17 +16,24 @@ public class Reserva {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime inicio;
-
-    private LocalDateTime fim;
-
+    @Column(nullable = false)
     private String titulo;
 
+    @Column(nullable = false)
+    private LocalDateTime inicio;
+
+    @Column(nullable = false)
+    private LocalDateTime fim;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private StatusReserva statusReserva;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "sala_id", nullable = false)
     private Sala sala;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 }
